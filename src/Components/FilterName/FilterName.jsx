@@ -1,6 +1,8 @@
 import React from 'react';
 import style from './FilterName.module.css';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
+import contactsAction from 'redux/contactsRedux/contactsAction';
 
 /* eslint react/prop-types: 1 */
 
@@ -15,4 +17,13 @@ FilterName.propTypes = {
   value: PropTypes.string,
   onChange: PropTypes.func,
 };
-export default FilterName;
+
+const mapStateToProps = ({ contacts: { filter } }) => ({
+  value: filter,
+});
+
+const mapDispatchToProps = dispatch => ({
+  onChange: e => dispatch(contactsAction.changeFilter(e.target.value)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(FilterName);

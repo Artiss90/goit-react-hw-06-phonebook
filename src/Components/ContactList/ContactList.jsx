@@ -1,12 +1,15 @@
+import contactsAction from 'redux/contactsRedux/contactsAction';
+import { connect } from 'react-redux';
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import style from './ContactList.module.css';
 import fade from 'transitionsCSS/fade.module.css';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import getFilterContacts from './getFilterContacts';
 
 /* eslint react/prop-types: 1 */
 
-export default class ContactList extends Component {
+class ContactList extends Component {
   static propTypes = {
     contacts: PropTypes.arrayOf(
       PropTypes.exact({
@@ -22,20 +25,36 @@ export default class ContactList extends Component {
     return (
       // TODO Добавление анимации на добавление-удаление списка контактов
       <TransitionGroup component="ul" className={style.list}>
-        {contacts.map(contact => (
-          <CSSTransition key={contact.id} timeout={250} classNames={fade}>
-            <li key={contact.id} className={style.item}>
-              <p className={style.contact}>
-                <span>{contact.name}:</span>
-                <span>{contact.number}</span>
-              </p>
-              <button type="button" onClick={() => onClickDelete(contact.id)}>
-                Delete
-              </button>
-            </li>
-          </CSSTransition>
-        ))}
+        {contacts &&
+          contacts.map(contact => (
+            <CSSTransition key={contact.id} timeout={250} classNames={fade}>
+              <li key={contact.id} className={style.item}>
+                <p className={style.contact}>
+                  <span>{contact.name}:</span>
+                  <span>{contact.number}</span>
+                </p>
+                <button type="button" onClick={() => onClickDelete(contact.id)}>
+                  Delete
+                </button>
+              </li>
+            </CSSTransition>
+          ))}
       </TransitionGroup>
     );
   }
 }
+
+const mapStateToProps = ({ contacts: { items, filter } }) => {
+  /** фильтруем, показываем только те что совпадают*/
+  return {
+    contacts: getFilterContacts(items, filter),
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onClickDelete: id => dispatch(contactsAction.deleteContact(id)),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ContactList);

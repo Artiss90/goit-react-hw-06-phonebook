@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 import { ToastContainer, toast } from 'react-toastify';
+import { connect } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
 import style from './Form.module.css';
+import contactsAction from 'redux/contactsRedux/contactsAction';
 
 /* eslint react/prop-types: 1 */
 
-export default class Form extends Component {
+class Form extends Component {
   static propTypes = {
     onSubmitForm: PropTypes.func,
   };
@@ -39,6 +41,7 @@ export default class Form extends Component {
     }
 
     if (name && number) {
+      // eslint-disable-next-line react/prop-types
       this.props.onSubmitForm(this.state);
     }
 
@@ -85,3 +88,11 @@ export default class Form extends Component {
     );
   }
 }
+
+const mapDispatchToProps = dispatch => {
+  return {
+    onSubmitForm: contact => dispatch(contactsAction.addContact(contact)),
+  };
+};
+
+export default connect(null, mapDispatchToProps)(Form);
