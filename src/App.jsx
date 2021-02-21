@@ -67,7 +67,7 @@ class App extends Component {
       number: number,
     };
     /**проверка на повторение имён */
-    if (contacts.find(contactPhone => contactPhone.name === name)) {
+    if (contacts.find(contactName => contactName.name === name)) {
       this.setState({ alertRepetition: `${name} is already in contacts!` });
       return;
     }
@@ -85,8 +85,8 @@ class App extends Component {
     const { filter, contacts } = this.state;
     const normalizedFilter = filter.toLowerCase();
 
-    return contacts.filter(contactPhone =>
-      contactPhone.name.toLowerCase().includes(normalizedFilter),
+    return contacts.filter(contactName =>
+      contactName.name.toLowerCase().includes(normalizedFilter),
     );
   };
 
