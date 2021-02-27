@@ -7,7 +7,7 @@ const itemsRedux = createReducer([], {
     /**проверка на повторение имён */
     if (_.find(contactName => contactName.name === payload.name)) {
       console.log(`${payload.name} is already in contacts!`);
-      return _;
+      return;
     }
     /**добавляем новый контакт в в состояние контактов */
     return [..._, payload];
