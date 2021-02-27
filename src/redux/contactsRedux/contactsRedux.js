@@ -15,7 +15,7 @@ const itemsRedux = (items = [], { type, payload }) => {
 
     case DELETE_CONTACT: {
       /**оставляем отфильтрованные контакты, у которых не совпал id */
-      return items.filter(contact => contact.id !== payload.id);
+      return items.filter(contact => contact.id !== payload);
     }
 
     default:
