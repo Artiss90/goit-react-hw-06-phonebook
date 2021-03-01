@@ -19,12 +19,6 @@ const persistConfig = {
   whitelist: ['items'],
 };
 
-// const rootReducer = combineReducers({
-//   contacts: persistReducer(persistConfig, contactsRedux),
-// });
-
-// const persistedReducer = persistReducer(persistConfig, rootReducer);
-
 const store = configureStore({
   reducer: { contacts: persistReducer(persistConfig, contactsRedux) },
   middleware: getDefaultMiddleware =>

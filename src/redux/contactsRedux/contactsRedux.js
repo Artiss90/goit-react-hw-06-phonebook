@@ -4,11 +4,6 @@ import contactsAction from './contactsAction';
 
 const itemsRedux = createReducer([], {
   [contactsAction.addContact]: (_, { payload }) => {
-    /**проверка на повторение имён */
-    // if (_.find(contactName => contactName.name === payload.name)) {
-    //   console.log(`${payload.name} is already in contacts!`);
-    //   return;
-    // }
     /**добавляем новый контакт в в состояние контактов */
     return [..._, payload];
   },

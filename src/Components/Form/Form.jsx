@@ -52,7 +52,7 @@ class Form extends Component {
       this.notify('Number');
     }
     if (contactsProps.find(contactName => contactName.name === name)) {
-      console.log(`${name} is already in contacts!`);
+      /**проверка на повторение имён */
       this.setState({ alertRepetition: `${name} is already in contacts!` });
       this.reset();
       return;
