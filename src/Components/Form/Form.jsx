@@ -1,20 +1,30 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import Alert from 'Components/Alert/Alert';
 import { v4 as uuidv4 } from 'uuid';
 import { ToastContainer, toast } from 'react-toastify';
 import { connect } from 'react-redux';
 import 'react-toastify/dist/ReactToastify.css';
 import style from './Form.module.css';
 import contactsAction from 'redux/contactsRedux/contactsAction';
+import fade from 'transitionsCSS/fade.module.css';
+import { CSSTransition } from 'react-transition-group';
 
 /* eslint react/prop-types: 1 */
 
 class Form extends Component {
   static propTypes = {
     onSubmitForm: PropTypes.func,
+    contacts: PropTypes.arrayOf(
+      PropTypes.exact({
+        id: PropTypes.string,
+        name: PropTypes.string,
+        number: PropTypes.string,
+      }),
+    ),
   };
 
-  state = { name: '', number: '' };
+  state = { name: '', number: '', alertRepetition: '' };
 
   nameInputId = uuidv4();
   numberInputId = uuidv4();
@@ -33,15 +43,21 @@ class Form extends Component {
   handleSubmit = e => {
     e.preventDefault();
     const { name, number } = this.state;
+    const contactsProps = this.props.contacts;
+    console.log(contactsProps);
     if (!name) {
       this.notify('Name');
     }
     if (!number) {
       this.notify('Number');
     }
-
+    if (contactsProps.find(contactName => contactName.name === name)) {
+      console.log(`${name} is already in contacts!`);
+      this.setState({ alertRepetition: `${name} is already in contacts!` });
+      this.reset();
+      return;
+    }
     if (name && number) {
-      // eslint-disable-next-line react/prop-types
       this.props.onSubmitForm(this.state);
     }
 
@@ -50,7 +66,6 @@ class Form extends Component {
 
   handleChange = e => {
     const { name, value } = e.currentTarget;
-    // console.log({ name, value });
     this.setState({ [name]: value });
   };
 
@@ -58,36 +73,58 @@ class Form extends Component {
     this.setState({ name: '', number: '' });
   };
 
+  onResetAlert = () => {
+    this.setState({ alertRepetition: '' });
+  };
+
   render() {
-    const { name, number } = this.state;
+    const { name, number, alertRepetition } = this.state;
     return (
-      <form onSubmit={this.handleSubmit} className={style.container}>
-        <label htmlFor={this.nameInputId} className={style.item}>
-          Name
-          <input
-            type="text"
-            name="name"
-            value={name}
-            onChange={this.handleChange}
-            id={this.nameInputId}
-          />
-        </label>
-        <label htmlFor={this.numberInputId} className={style.item}>
-          Number
-          <input
-            type="tel"
-            name="number"
-            value={number}
-            onChange={this.handleChange}
-            id={this.numberInputId}
-          />
-        </label>
-        <ToastContainer />
-        <button type="submit">Add contact</button>
-      </form>
+      <>
+        <form onSubmit={this.handleSubmit} className={style.container}>
+          <label htmlFor={this.nameInputId} className={style.item}>
+            Name
+            <input
+              type="text"
+              name="name"
+              value={name}
+              onChange={this.handleChange}
+              id={this.nameInputId}
+            />
+          </label>
+          <label htmlFor={this.numberInputId} className={style.item}>
+            Number
+            <input
+              type="tel"
+              name="number"
+              value={number}
+              onChange={this.handleChange}
+              id={this.numberInputId}
+            />
+          </label>
+          <ToastContainer />
+          <button type="submit">Add contact</button>
+        </form>
+        <CSSTransition
+          //TODO Анимация появления-исчезания предупреждения о совпадении имён по условию
+          in={alertRepetition.length > 0}
+          timeout={3000}
+          classNames={fade}
+          unmountOnExit
+          onEntered={() => this.onResetAlert()}
+        >
+          <Alert message={alertRepetition} />
+        </CSSTransition>
+      </>
     );
   }
 }
+
+const mapStateToProps = ({ contacts: { items } }) => {
+  return {
+    contacts: items,
+  };
+};
 
 const mapDispatchToProps = dispatch => {
   return {
@@ -95,4 +132,4 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(null, mapDispatchToProps)(Form);
+export default connect(mapStateToProps, mapDispatchToProps)(Form);

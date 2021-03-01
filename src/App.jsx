@@ -9,7 +9,7 @@ import FilterName from './Components/FilterName/FilterName';
 import style from './App.module.css';
 import classNames from 'classnames/bind';
 import Logo from 'Components/Logo/Logo';
-import Alert from 'Components/Alert/Alert';
+// import Alert from 'Components/Alert/Alert';
 import appearSlide from './transitionsCSS/appearSlide.module.css'; /**модули CSS указывать до CSSTransition */
 import fade from './transitionsCSS/fade.module.css';
 // import fadeScale from './transitionsCSS/fadeScale.module.css';
@@ -37,7 +37,7 @@ class App extends Component {
     //   { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
     // ],
     // filter: '',
-    alertRepetition: '',
+    // alertRepetition: '',
   };
 
   componentDidMount() {
@@ -84,9 +84,9 @@ class App extends Component {
   //     contacts: [phoneContact, ...contacts],
   //   }));
   // };
-  onResetAlert = () => {
-    this.setState({ alertRepetition: '' });
-  };
+  // onResetAlert = () => {
+  //   this.setState({ alertRepetition: '' });
+  // };
 
   // changeFilter = e => {
   //   this.setState({ filter: e.currentTarget.value });
@@ -111,7 +111,7 @@ class App extends Component {
   // };
 
   render() {
-    const { alertRepetition } = this.state;
+    // const { alertRepetition } = this.state;
     const { contacts } = this.props;
     return (
       <>
@@ -124,16 +124,6 @@ class App extends Component {
           unmountOnExit
         >
           <Logo />
-        </CSSTransition>
-        <CSSTransition
-          //TODO Анимация появления-исчезания предупреждения о совпадении имён по условию
-          in={alertRepetition.length > 0}
-          timeout={3000}
-          classNames={fade}
-          unmountOnExit
-          onEntered={() => this.onResetAlert()}
-        >
-          <Alert message={alertRepetition} />
         </CSSTransition>
         <Form
         // ? функция добавления контакта реализована через Redux
