@@ -46,6 +46,7 @@ class ContactList extends Component {
 
 const mapStateToProps = ({ contacts: { items, filter } }) => {
   /** фильтруем, показываем только те что совпадают*/
+  console.log(filter);
   return {
     contacts: getFilterContacts(items, filter),
   };
@@ -54,6 +55,7 @@ const mapStateToProps = ({ contacts: { items, filter } }) => {
 const mapDispatchToProps = dispatch => {
   return {
     onClickDelete: id => dispatch(contactsAction.deleteContact(id)),
+    clearFilter: e => dispatch(contactsAction.changeFilter(e.target.value)),
   };
 };
 

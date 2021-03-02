@@ -10,6 +10,7 @@ import Logo from 'Components/Logo/Logo';
 import appearSlide from './transitionsCSS/appearSlide.module.css'; /**модули CSS указывать до CSSTransition */
 import fade from './transitionsCSS/fade.module.css';
 import { CSSTransition } from 'react-transition-group';
+import contactsAction from 'redux/contactsRedux/contactsAction';
 
 /* eslint react/prop-types: 1 */
 
@@ -24,10 +25,11 @@ class App extends Component {
         number: PropTypes.string,
       }),
     ),
+    clearFilter: PropTypes.func,
   };
 
   render() {
-    const { contacts } = this.props;
+    const { contacts, clearFilter } = this.props;
     return (
       <>
         <CSSTransition
@@ -49,6 +51,7 @@ class App extends Component {
           timeout={500}
           classNames={fade}
           unmountOnExit
+          onExit={() => clearFilter()}
         >
           <FilterName />
         </CSSTransition>
@@ -64,5 +67,10 @@ const mapStateToProps = ({ contacts: { items } }) => {
     contacts: items,
   };
 };
+const mapDispatchToProps = dispatch => {
+  return {
+    clearFilter: () => dispatch(contactsAction.changeFilter('')),
+  };
+};
 
-export default connect(mapStateToProps)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
